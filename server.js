@@ -3,7 +3,8 @@ import express from "express";
 import dotenv from "dotenv";
 
 import dados from "./src/data/dados.js";
-const { bruxos } = dados;
+const { bruxos, casas, varinhas, animais, pocoes } = dados;
+
 
 // Criar aplicação com Express e configurar para aceitar JSON
 const app = express();
@@ -47,6 +48,76 @@ app.get('/bruxos', (req, res) => {
     });
 });
 
+//Rota de Varinhas com filtros (Query Params)
+app.get('/varinhas', (req, res) => {
+    const { material, nucleo, id, comprimento} = req.query;
+    let resultado = varinhas;
+  
+    if (material) {
+      resultado = resultado.filter(b => b.material.toLowerCase() === material.toLowerCase());
+    }
+  
+    if (nucleo) {
+      resultado = resultado.filter(b => b.nucleo == nucleo);
+    }
+  
+    if (id) {
+      resultado = resultado.filter(b => b.id.toLowerCase().includes(id.toLowerCase()));
+    }
+  
+    if (comprimento) {
+      resultado = resultado.filter(b => b.comprimento.toLowerCase().includes(comprimento.toLowerCase()));
+    }
+  
+    res.status(200).json({
+      total: resultado.length,
+      data: resultado
+    });
+});
+
+//Rota de Poções com filtros (Query Params)
+app.get('/pocoes', (req, res) => {
+    const { id, nome, efeito} = req.query;
+    let resultado = pocoes;
+  
+    if (efeito) {
+      resultado = resultado.filter(b => b.efeito.toLowerCase().includes(efeito.toLowerCase()));
+    }
+    
+    if (nome) {
+      resultado = resultado.filter(b => b.nome.toLowerCase().includes(nome.toLowerCase()));
+    }
+    
+  
+    res.status(200).json({
+      total: resultado.length,
+      data: resultado
+    });
+});
+
+//Rota de Animais com filtros (Query Params)
+app.get('/animais', (req, res) => {
+    const { id, nome, tipo} = req.query;
+    let resultado = animais;
+  
+    if (tipo) {
+      resultado = resultado.filter(b => b.tipo.toLowerCase().includes(tipo.toLowerCase()));
+    }
+  
+    if (id) {
+      resultado = resultado.filter(b => b.id.toLowerCase().includes(id.toLowerCase()));
+    }
+  
+    if (nome) {
+      resultado = resultado.filter(b => b.nome.toLowerCase().includes(nome.toLowerCase()));
+    }
+  
+    res.status(200).json({
+      total: resultado.length,
+      data: resultado
+    });
+});
+
 //Body
 
 app.post("/bruxos", (req, res) => {
@@ -54,7 +125,7 @@ app.post("/bruxos", (req, res) => {
 
     if(!nome || !casa || !ano || !vivo) {
         return res.status(400).json({
-            sucess: false,
+            success: false,
             message: "Nome, casa, ano e estar vivo são obrigatórios para um bruxo!"
         })
     }
