@@ -1,0 +1,32 @@
+app.get("/stats", (req, res) => {
+  // 1️⃣ Contar bruxos por casa
+  const contagemPorCasa = {};
+  bruxos.forEach(b => {
+    const casa = b.casa;
+    contagemPorCasa[casa] = (contagemPorCasa[casa] || 0) + 1;
+  });
+
+  // 2️⃣ Contar materiais de varinha
+  const contagemMaterial = {};
+  varinhas.forEach(v => {
+    const material = v.material;
+    contagemMaterial[material] = (contagemMaterial[material] || 0) + 1;
+  });
+
+  // Encontrar o material mais comum
+  let materialMaisComum = null;
+  let maiorContagem = 0;
+  for (const material in contagemMaterial) {
+    if (contagemMaterial[material] > maiorContagem) {
+      maiorContagem = contagemMaterial[material];
+      materialMaisComum = material;
+    }
+  }
+
+  // 🔮 Resposta final
+  res.status(200).json({
+    totalBruxos: bruxos.length,
+    bruxosPorCasa: contagemPorCasa,
+    materialDeVarinhaMaisComum: materialMaisComum
+  });
+});

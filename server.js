@@ -145,10 +145,37 @@ app.post("/bruxos", (req, res) => {
     //Adicione ele no Array
     bruxos.push(novoBruxo);
 
-    req.status(201).json({
+    res.status(201).json({
         sucess: true,
         message: "Novo bruxo adicionado a Hogwarts!",
         data: novoBruxo
+    });
+})
+
+app.post("/varinhas", (req, res) => {
+    const {id, material, nucleo, comprimento} = req.body;
+
+    if(!material || !nucleo || !comprimento) {
+        return res.status(400).json({
+            success: false,
+            message: "Precisa ter material, núcleo e comprimento!"
+        })
+    }
+
+    const novaVarinha = {
+        id: varinhas.length + 1,
+        material,
+        nucleo: nucleo,
+        comprimento: comprimento || "Ainda não definido"
+    }
+
+    //Adicione ele no Array
+    varinhas.push(novaVarinha);
+
+    res.status(201).json({
+        success: true,
+        message: "Nova Varinha adicionado a Hogwarts!",
+        data: novaVarinha
     });
 })
 
